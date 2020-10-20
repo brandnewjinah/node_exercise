@@ -1,26 +1,49 @@
 const express = require("express");
+const { count } = require("../models/product");
 const router = express.Router();
+const productModel = require("../models/product");
 
 //CRUD
 
 router.get("/", (req, res) => {
-  res.json({
-    message: "read data",
-  });
+  //get items in the productModel form
+  productModel
+    .find()
+    .then((items) => {
+      res.json({
+        message: "total products",
+        count: items.length,
+        products: items,
+      });
+    })
+    .catch((err) => {
+      res.json({
+        message: err.message,
+      });
+    });
 });
 
 router.post("/", (req, res) => {
-  //save req received as productData
-  const productData = {
+  //create a new product object in the productModel form
+  const newProduct = new productModel({
     name: req.body.productname,
     price: req.body.productprice,
-  };
-
-  //give productData as res
-  res.json({
-    messaage: "create data",
-    productInfo: productData,
   });
+
+  //save to the db
+  newProduct
+    .save()
+    .then((product) => {
+      res.json({
+        message: "product saved",
+        productInfo: product,
+      });
+    })
+    .catch((err) => {
+      res.json({
+        message: err.message,
+      });
+    });
 });
 
 router.put("/", (req, res) => [

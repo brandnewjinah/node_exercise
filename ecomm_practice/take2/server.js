@@ -14,6 +14,17 @@ const bodyParser = require("body-parser");
 //require db
 const mongoose = require("mongoose");
 
+//setup db
+const dbOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
+mongoose
+  .connect(process.env.MONGODB_ADDRESS, dbOptions)
+  .then(() => console.log("db connected"))
+  .catch((err) => console.log(err.message));
+
 //use middleware
 app.use(morgan("dev"));
 app.use(bodyParser.json());
