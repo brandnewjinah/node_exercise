@@ -10,8 +10,16 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+  //save req received as productData
+  const productData = {
+    name: req.body.productname,
+    price: req.body.productprice,
+  };
+
+  //give productData as res
   res.json({
     messaage: "create data",
+    productInfo: productData,
   });
 });
 
