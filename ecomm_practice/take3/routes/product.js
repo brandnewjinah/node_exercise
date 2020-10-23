@@ -64,10 +64,27 @@ router.post("/", (req, res) => {
     });
 });
 
-router.put("/", (req, res) => {
-  res.json({
-    message: "data updated",
-  });
+//update
+router.put("/:productId", (req, res) => {
+  const id = req.params.productId;
+  const updateOps = {};
+
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
+
+  productModel
+    .findByIdAndUpdate(id, { $set: updateOps })
+    .then((result) => {
+      res.json({
+        message: "product updated",
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err,
+      });
+    });
 });
 
 //delete certain product
