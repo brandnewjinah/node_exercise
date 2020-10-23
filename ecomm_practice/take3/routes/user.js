@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const userModel = require("../models/user");
 
 //user sign up
@@ -52,6 +53,41 @@ router.post("/signup", (req, res) => {
 });
 
 //user log in
-router.post("/login", (req, res) => {});
+router.post("/login", (req, res) => {
+  userModel
+    .findOne({ email: req.body.email })
+    .then((user) => {
+      if (!user) {
+        return res.status(400).json({
+          message: "not a resistered user",
+        });
+      } else {
+        bcrypt.compare(req.body.password, user.password, (err, result) => {
+          console.log(result);
+          if (err || result === false) {
+            return res.status(400).json({
+              message: "password incorrect",
+            });
+          } else {
+            //create token and return
+            const token = jwt.sign(
+              { userId: user._id, email: user.email },
+              "secret",
+              { expiresIn: "1d" }
+            );
+            res.status(200).json({
+              message: "user logged in",
+              token: token,
+            });
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err,
+      });
+    });
+});
 
 module.exports = router;
