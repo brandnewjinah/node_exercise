@@ -10,7 +10,18 @@ router.get("/", (req, res) => {
       res.json({
         message: "all products",
         count: products.length,
-        products: products,
+        products: products.map((product) => {
+          return {
+            id: product._id,
+            name: product.name,
+            price: product.price,
+            category: product.category,
+            request: {
+              type: "GET",
+              url: "http://localhost:5000/product/" + product._id,
+            },
+          };
+        }),
       });
     })
     .catch((err) => {
@@ -28,7 +39,19 @@ router.get("/:productId", (req, res) => {
     .then((doc) => {
       console.log("from database", doc);
       if (doc) {
-        res.status(200).json(doc);
+        res.status(200).json({
+          message: "get data",
+          productInfo: {
+            id: doc._id,
+            name: doc.name,
+            price: doc.price,
+            category: doc.category,
+          },
+          request: {
+            type: "GET",
+            url: "http://localhost:5000/product",
+          },
+        });
       } else {
         res.status(404).json({
           message: "No valid entry found for provided ID",
@@ -54,7 +77,16 @@ router.post("/", (req, res) => {
     .then((product) => {
       res.json({
         message: "product saved",
-        productInfo: product,
+        productInfo: {
+          id: product._id,
+          name: product.name,
+          price: product.price,
+          category: product.category,
+          request: {
+            type: "GET",
+            url: "http://localhost:5000/product/" + product._id,
+          },
+        },
       });
     })
     .catch((err) => {
@@ -78,6 +110,10 @@ router.put("/:productId", (req, res) => {
     .then((result) => {
       res.json({
         message: "product updated",
+        request: {
+          type: "GET",
+          url: "http://localhost:5000/product/" + id,
+        },
       });
     })
     .catch((err) => {
@@ -97,6 +133,15 @@ router.delete("/:productId", (req, res) => {
       console.log("delete", result);
       res.json({
         message: "deleted product",
+        request: {
+          type: "GET",
+          url: "http://localhost:5000/product",
+          body: {
+            name: "String",
+            price: "Number",
+            category: "String",
+          },
+        },
       });
     })
     .catch((err) => {
