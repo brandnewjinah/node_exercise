@@ -70,10 +70,37 @@ router.put("/", (req, res) => {
   });
 });
 
+//delete certain product
+
+router.delete("/:productId", (req, res) => {
+  const id = req.params.productId;
+  productModel
+    .findByIdAndDelete(id)
+    .then((result) => {
+      console.log("delete", result);
+      res.json({
+        message: "deleted product",
+      });
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+//delete all product
+
 router.delete("/", (req, res) => {
-  res.json({
-    message: "data deleted",
-  });
+  productModel
+    .remove()
+    .then((result) => {
+      console.log("delete", result);
+      res.json({
+        message: "deleted all products",
+      });
+    })
+    .catch((err) => {
+      res.json(err);
+    });
 });
 
 module.exports = router;
