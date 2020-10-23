@@ -20,6 +20,26 @@ router.get("/", (req, res) => {
     });
 });
 
+//detail get product
+router.get("/:productId", (req, res) => {
+  const id = req.params.productId;
+  productModel
+    .findById(id)
+    .then((doc) => {
+      console.log("from database", doc);
+      if (doc) {
+        res.status(200).json(doc);
+      } else {
+        res.status(404).json({
+          message: "No valid entry found for provided ID",
+        });
+      }
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
 router.post("/", (req, res) => {
   //from the post req create a new product matching to the model
   const newProduct = new productModel({
