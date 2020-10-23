@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 
 //require router
 const productRoute = require("./routes/product");
+const orderRoute = require("./routes/order");
 
 //require db
 const mongoose = require("mongoose");
@@ -31,6 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //use router
 app.use("/product", productRoute);
+app.use("/order", orderRoute);
 
 const PORT = process.env.PORT || 7000;
 app.listen(PORT, console.log("server connected"));
