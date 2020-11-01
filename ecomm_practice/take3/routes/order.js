@@ -100,4 +100,24 @@ router.post("/", (req, res) => {
     });
 });
 
+//order delete
+router.delete("/:orderId", (req, res) => {
+  const id = req.params.orderId;
+  orderModel
+    .findByIdAndDelete(id)
+    .then((result) => {
+      console.log("delete", result);
+      res.json({
+        message: "deleted order",
+        request: {
+          type: "GET",
+          url: "http:/localhost:5000/order",
+        },
+      });
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
 module.exports = router;
