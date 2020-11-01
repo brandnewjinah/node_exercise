@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const productModel = require("../models/product");
+const checkAuth = require("../middleware/check-auth");
 
 router.get("/", (req, res) => {
   //show data from the db
@@ -32,7 +33,7 @@ router.get("/", (req, res) => {
 });
 
 //detail get product
-router.get("/:productId", (req, res) => {
+router.get("/:productId", checkAuth, (req, res) => {
   const id = req.params.productId;
   productModel
     .findById(id)
@@ -63,7 +64,7 @@ router.get("/:productId", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", checkAuth, (req, res) => {
   //from the post req create a new product matching to the model
   const newProduct = new productModel({
     name: req.body.productname,
@@ -97,7 +98,7 @@ router.post("/", (req, res) => {
 });
 
 //update
-router.put("/:productId", (req, res) => {
+router.put("/:productId", checkAuth, (req, res) => {
   const id = req.params.productId;
   const updateOps = {};
 
@@ -125,7 +126,7 @@ router.put("/:productId", (req, res) => {
 
 //delete certain product
 
-router.delete("/:productId", (req, res) => {
+router.delete("/:productId", checkAuth, (req, res) => {
   const id = req.params.productId;
   productModel
     .findByIdAndDelete(id)
@@ -151,7 +152,7 @@ router.delete("/:productId", (req, res) => {
 
 //delete all product
 
-router.delete("/", (req, res) => {
+router.delete("/", checkAuth, (req, res) => {
   productModel
     .remove()
     .then((result) => {

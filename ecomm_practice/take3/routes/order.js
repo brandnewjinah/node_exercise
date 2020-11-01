@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const orderModel = require("../models/order");
 const productModel = require("../models/product");
+const checkAuth = require("../middleware/check-auth");
 
-router.get("/", (req, res) => {
+router.get("/", checkAuth, (req, res) => {
   orderModel
     .find()
     .populate("product", ["name", "price"])
@@ -32,7 +33,7 @@ router.get("/", (req, res) => {
 });
 
 //order detail
-router.get("/:orderId", (req, res) => {
+router.get("/:orderId", checkAuth, (req, res) => {
   const id = req.params.orderId;
   orderModel
     .findById(id)
@@ -63,7 +64,7 @@ router.get("/:orderId", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", checkAuth, (req, res) => {
   productModel
     .findById(req.body.productId)
     .then((product) => {
