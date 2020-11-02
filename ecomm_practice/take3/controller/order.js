@@ -63,6 +63,7 @@ exports.order_get_detail = (req, res) => {
 
 // post order
 exports.order_post = (req, res) => {
+  const { product, quantity } = req.body;
   productModel
     .findById(req.body.productId)
     .then((product) => {
@@ -72,8 +73,8 @@ exports.order_post = (req, res) => {
         });
       }
       const order = new orderModel({
-        product: req.body.productId,
-        quantity: req.body.quantity,
+        product,
+        quantity,
       });
       return order.save();
     })

@@ -2,23 +2,25 @@ const userModel = require("../models/user");
 
 // signup
 exports.user_signup = (req, res) => {
+  const { username, email, password } = req.body;
+
   userModel
-    .findOne({ email: req.body.email })
+    .findOne({ email })
     .then((user) => {
       if (user) {
         return res.status(400).json({
           message: "email already being used",
         });
       } else {
-        bcrypt.hash(req.body.password, 10, (err, hash) => {
+        bcrypt.hash(password, 10, (err, hash) => {
           if (err) {
             return res.status(500).json({
               error: err,
             });
           } else {
             const user = new userModel({
-              username: req.body.username,
-              email: req.body.email,
+              username,
+              email,
               password: hash,
             });
 
@@ -49,15 +51,17 @@ exports.user_signup = (req, res) => {
 };
 
 exports.user_login = (req, res) => {
+  const { email, password } = req.body;
+
   userModel
-    .findOne({ email: req.body.email })
+    .findOne({ email })
     .then((user) => {
       if (!user) {
         return res.status(400).json({
           message: "not a resistered user",
         });
       } else {
-        bcrypt.compare(req.body.password, user.password, (err, result) => {
+        bcrypt.compare(password, user.password, (err, result) => {
           console.log(result);
           if (err || result === false) {
             return res.status(400).json({

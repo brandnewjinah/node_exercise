@@ -64,11 +64,12 @@ exports.product_get_product = (req, res) => {
 
 // post product
 exports.product_post_product = (req, res) => {
+  const { name, category, price } = req.body;
   //from the post req create a new product matching to the model
   const newProduct = new productModel({
-    name: req.body.productname,
-    category: req.body.productcategory,
-    price: req.body.productprice,
+    name,
+    category,
+    price,
   });
 
   //with the new product, save to db, then display the product saved with a msg. catch error if any
